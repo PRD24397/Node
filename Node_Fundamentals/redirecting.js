@@ -1,4 +1,6 @@
 const http = require('http');
+const fs = require('fs');
+
 const server = http.createServer((req, res) => {
     const url = req.url;
     const method = req.method;
@@ -9,18 +11,17 @@ const server = http.createServer((req, res) => {
       res.write('</html>');
       return res.end();
     }
-    
-    res.setHeader('Content-Type','text/html');
-    res.write('<html>');
-    res.write('<head>');
-    res.write('<node application>');
-    res.write('</head>');
-    res.write('<body>');
-    res.write('Hi');
-    res.write('</body>');
-    res.write('</html>');
-    res.end(); 
-    
+
+    if (url === '/message' && method == 'POST'){
+
+        fs.writeFileSync('message.txt', 'DUMMY DATA');
+        // this writes dummy data in the file created in the first argument
+        res.statusCode(302);
+        res.setHeader('Location','/');
+        // this is how redirection happens. Changing the responses header Location to the target address
+        return res.end(); 
+    }
+
 });
 
 server.listen(3000);
