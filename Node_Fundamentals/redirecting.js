@@ -16,7 +16,7 @@ const server = http.createServer((req, res) => {
 
         fs.writeFileSync('message.txt', 'DUMMY DATA');
         // this writes dummy data in the file created in the first argument
-        res.statusCode(302);
+        res.statusCode = 302;
         res.setHeader('Location','/');
         // this is how redirection happens. Changing the responses header Location to the target address
         return res.end(); 
