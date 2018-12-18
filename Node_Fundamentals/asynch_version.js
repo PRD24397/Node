@@ -19,20 +19,25 @@ const server = http.createServer((req, res) => {
                 body.push(chunk);
         }); // this listens to the data event.Data event is fired when the new chunk is ready to be read
 
-        req.on('end', () => {
+        return req.on('end', () => {
             const parsedBody = Buffer.concat(body).toString(); // Buffer is the implicit buffer offred by js. tostring converts the buffer contents to the string format
             console.log(parsedBody);
             const message = parsedBody.split('=')[1];
-            fs.writeFileSync('message.txt', message);   // this writes dummy data in the file created in the first argument
-        }) // this event is listened after the chunks are arrived. Here we keep those in the Buffer to interact with the buffer
+            fs.writeFile('message.txt', message, (err) => {
+
+                res.statusCode = 302;
+                res.setHeader('Location','/');
+        // this is how redirection happens. Changing the responses header Location to the target address
+        return res.end();
+
+            });   // this writes dummy data in the file created in the first argument
+        }); // this event is listened after the chunks are arrived. Here we keep those in the Buffer to interact with the buffer
         
         
 
         
-        res.statusCode = 302;
-        res.setHeader('Location','/');
-        // this is how redirection happens. Changing the responses header Location to the target address
-        return res.end(); 
+        
+        
     }
 
 });
